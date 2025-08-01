@@ -38,6 +38,8 @@ export default defineConfig({
         popup: resolve(__dirname, 'src/index.html'),
         background: resolve(__dirname, 'src/background.js'),
         content: resolve(__dirname, 'src/content.js'),
+        script: resolve(__dirname, 'src/script.js'),
+        eip6963: resolve(__dirname, 'src/eip6963.js'),
       },
       output: {
         entryFileNames: '[name].js',

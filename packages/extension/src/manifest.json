@@ -19,12 +19,17 @@
     {
       "matches": ["http://*/*", "https://*/*"],
       "js": ["content.js"]
+    },
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["eip6963.js"],
+      "world": "MAIN"
     }
   ],
   "permissions": ["activeTab", "storage", "alarms", "tabs", "scripting"],
   "web_accessible_resources": [
     {
-      "resources": ["src/index.html", "script.js"],
+      "resources": ["src/index.html", "script.js", "eip6963.js", "assets/popup.css", "popup.js"],
       "matches": ["<all_urls>"]
     }
   ],

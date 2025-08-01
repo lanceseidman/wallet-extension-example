@@ -1,5 +1,6 @@
 import { keyVault } from "../lib/keyVault";
 import FlowAccount from "../lib/flowAccount";
+import EVMAccount from "../lib/evmAccount";
 import { accountManager } from "../lib/AccountManager";
 import * as fcl from "@onflow/fcl";
 import { sign } from "./signatures";
@@ -120,4 +121,19 @@ export const derivePrivKey = async (seedPhrase) => {
 
 export const rotateFlowAccountKey = async (accountAddress) => {
   throw new Error("Key rotation not yet supported");
+};
+
+export const importEVMAccount = async (privKey, password) => {
+  if (!privKey || privKey.length === 0) {
+    throw new Error("Invalid private key provided");
+  }
+
+  const account = new EVMAccount({
+    privKey: privKey,
+  });
+
+  await accountManager.importAccount(account);
+  await keyVault.unlockVault(password);
+  await keyVault.addKey(account.address, privKey, password);
+  await accountManager.setFavoriteAccount(account.address);
 };

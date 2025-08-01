@@ -17,12 +17,14 @@ import {
 import { useToast } from "@chakra-ui/toast";
 import { accountManager } from "../lib/AccountManager";
 import { keyVault } from "../lib/keyVault";
+import EVMAccount from "../lib/evmAccount";
 import Title from "../components/Title";
 import Layout from "../components/Layout";
 import * as styles from "../styles";
 
 const KeysDisplay = ({ location }) => {
   const [account, setAccount] = useState(null);
+  const [evmAccount, setEvmAccount] = useState(null);
   const [keys, setKeys] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showPrivateKey, setShowPrivateKey] = useState(false);
@@ -34,6 +36,9 @@ const KeysDisplay = ({ location }) => {
   );
   const { hasCopied: hasCopiedPublic, onCopy: onCopyPublic } = useClipboard(
     keys?.publicKey || ""
+  );
+  const { hasCopied: hasCopiedEvm, onCopy: onCopyEvm } = useClipboard(
+    evmAccount?.address || ""
   );
 
   useEffect(() => {
@@ -81,6 +86,10 @@ const KeysDisplay = ({ location }) => {
 
         const firstKey = keysList[0];
         const privateKey = keyVault.getKey(firstKey.publicKey);
+
+        // Create EVM account from the private key
+        const evmAccount = new EVMAccount({ privKey: privateKey });
+        setEvmAccount(evmAccount);
 
         setKeys({
           publicKey: firstKey.publicKey,
@@ -238,6 +247,38 @@ const KeysDisplay = ({ location }) => {
             </Box>
           </VStack>
         </Box>
+
+        <Divider />
+
+        {/* EVM Account Section */}
+        {evmAccount && (
+          <Box>
+            <Text fontSize="lg" fontWeight="bold" mb={3}>
+              EVM Account
+            </Text>
+            <VStack spacing={3} align="stretch">
+              <Box>
+                <Text fontSize="sm" fontWeight="semibold" color="gray.300">
+                  Address
+                </Text>
+                <HStack>
+                  <Code
+                    fontSize="xs"
+                    p={2}
+                    borderRadius="md"
+                    wordBreak="break-all"
+                    flex={1}
+                  >
+                    {evmAccount.address}
+                  </Code>
+                  <Button size="sm" onClick={onCopyEvm}>
+                    {hasCopiedEvm ? "Copied!" : "Copy"}
+                  </Button>
+                </HStack>
+              </Box>
+            </VStack>
+          </Box>
+        )}
       </VStack>
     </Layout>
   );
