@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "description": "Chrome wallet extension for Flow",
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "action": {
     "default_popup": "src/index.html",

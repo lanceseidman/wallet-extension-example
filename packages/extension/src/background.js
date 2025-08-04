@@ -38,10 +38,26 @@ function createPopup(hostTabId, service) {
   }
 }
 
-import { accountManager } from "./lib/AccountManager";
-
 // Function called when a new message is received
 const extMessageHandler = (msg, sender, sendResponse) => {
+  if (msg.type === "eth_requestAccounts") {
+    import("./lib/AccountManager").then(({ accountManager }) => {
+      const service = {
+        type: "eth_requestAccounts",
+      };
+      chrome.tabs.query(
+        {
+          active: true,
+          lastFocusedWindow: true,
+        },
+        (tabs) => {
+          createPopup(tabs[0].id, service);
+        }
+      );
+    });
+    // This is an async message, so we need to return true
+    return true;
+  }
   // Messages from FCL, posted to window and proxied from content.js
   const { service } = msg;
   // Launches extension popup window

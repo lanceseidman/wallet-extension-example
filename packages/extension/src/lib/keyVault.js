@@ -46,6 +46,7 @@ class KeyVault {
 
   // decrypt the data from localStorage and keep in this object as well as sessionStorage
   async unlockVault(password) {
+    console.log("Unlocking vault...");
     // take encrypted data from localStorage and push it into sessionStorage
     return await new Promise((resolve, reject) => {
       try {
@@ -61,9 +62,11 @@ class KeyVault {
             passworder
               .decrypt(password, blob.encrypted_vault)
               .then(async (decrypted_data) => {
+                console.log("Vault unlocked successfully");
                 resolve(await this._setSessionUnlocked(decrypted_data));
               })
               .catch((e) => {
+                console.error("Failed to unlock vault:", e);
                 reject(e);
               });
           }
